@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yessi Sushi - Venta de Sushi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .logo {
+            width: 200px;
+        }
+        .btn-whatsapp, .btn-menu {
+            display: inline-block;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        .btn-whatsapp:hover {
+            background-color: #1ebe5d;
+        }
+        .btn-menu {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+        }
+        .btn-menu:hover {
+            background-color: #e68900;
+        }
+        #menu {
+            display: none;
+            margin-top: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        .menu-item img {
+            width: 100px;
+            height: auto;
+            margin-left: 20px;
+        }
+        .menu-item span {
+            text-align: left;
+            margin-right: 20px;
+        }
+        .menu-item button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .menu-item button:hover {
+            background-color: #45a049;
+        }
+        #subtotal {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        .selected-products {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .product {
+            margin-bottom: 10px;
+        }
+        .product button {
+            background-color: #f44336;
+        }
+        .product button:hover {
+            background-color: #e41f1f;
+        }
+        @media (max-width: 768px) {
+            .menu-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .menu-item img {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+    <script>
+        let productosSeleccionados = [];
+        let subtotal = 0;
+
+        function agregarProducto(nombre, precio) {
+            // Verificar si el producto ya está en la lista
+            let productoExistente = productosSeleccionados.find(producto => producto.nombre === nombre);
+            if (productoExistente) {
+                // Si ya existe, aumentar la cantidad y el precio total
+                productoExistente.cantidad += 1;
+                subtotal += precio;
+            } else {
+                // Si no existe, agregarlo a la lista
+                productosSeleccionados.push({ nombre, precio, cantidad: 1 });
+                subtotal += precio;
+            }
+            // Actualizar el subtotal
+            document.getElementById('subtotal').innerText = 'Subtotal: $' + subtotal;
+
+            // Actualizar la lista de productos seleccionados
+            actualizarProductosSeleccionados();
+
+            // Actualizar el mensaje de WhatsApp
+            actualizarMensajeWhatsApp();
+        }
+
+        function eliminarProducto(nombre, precio) {
+            // Encontrar el producto en la lista
+            let index = productosSeleccionados.findIndex(producto => producto.nombre === nombre);
+            if (index !== -1) {
+                // Si hay más de una unidad, reducir la cantidad
+                if (productosSeleccionados[index].cantidad > 1) {
+                    productosSeleccionados[index].cantidad -= 1;
+                    subtotal -= precio;
+                } else {
+                    // Si solo queda una unidad, eliminar el producto
+                    productosSeleccionados.splice(index, 1);
+                    subtotal -= precio;
+                }
+                // Actualizar el subtotal
+                document.getElementById('subtotal').innerText = 'Subtotal: $' + subtotal;
+
+                // Actualizar la lista de productos seleccionados
+                actualizarProductosSeleccionados();
+
+                // Actualizar el mensaje de WhatsApp
+                actualizarMensajeWhatsApp();
+            }
+        }
+
+        function actualizarProductosSeleccionados() {
+            let listaProductos = document.getElementById('selected-products');
+            listaProductos.innerHTML = ''; // Limpiar la lista antes de actualizar
+            productosSeleccionados.forEach(producto => {
+                let item = document.createElement('div');
+                item.classList.add('product');
+                item.innerHTML = `
+                    ${producto.nombre} x${producto.cantidad} - $${producto.precio * producto.cantidad} 
+                    <button onclick="eliminarProducto('${producto.nombre}', ${producto.precio})">Eliminar</button>
+                `;
+                listaProductos.appendChild(item);
+            });
+        }
+
+        function actualizarMensajeWhatsApp() {
+            let mensaje = "¡Hola! Me gustaría realizar un pedido de los siguientes productos:\n";
+            productosSeleccionados.forEach(producto => {
+                mensaje += `- ${producto.nombre} x${producto.cantidad} - $${producto.precio * producto.cantidad}\n`;
+            });
+            mensaje += `\nSubtotal: $${subtotal}`;
+            let enlace = `https://wa.me/523329654769?text=${encodeURIComponent(mensaje)}`;
+            document.getElementById('whatsapp-link').href = enlace;
+        }
+
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="1.jpg" alt="Logo Yessi Sushi" class="logo">
+        <h1>Bienvenido a Sushi Yessi </h1>
+        <p>Delicioso sushi a un clic de distancia</p>
+        <p>Pedidos a Domicilo Mascula, Las trancas, Arroyo seco</p>
+        <button class="btn-menu" onclick="toggleMenu()">Ver Menú</button>
+        <div id="menu">
+            <h2>Menú de Productos</h2>
+            <div class="menu-item">
+                <span>
+                    <strong>Sushi Natural</strong> - $100 (Camarón, pepino, aguacate y Philadelphia)<br>
+                </span>
+                <img src="sushi-natural.jpg" alt="Sushi Natural">
+                <button onclick="agregarProducto('Sushi Natural', 100)">Agregar</button>
+            </div>
+            <div class="menu-item">
+                <span>
+                    <strong>Sushi Empanizado</strong> - $110 (Camarón, pepino, aguacate y Philadelphia)<br>
+                </span>
+                <img src="sushi-empanizado.jpg" alt="Sushi Empanizado">
+                <button onclick="agregarProducto('Sushi Empanizado', 110)">Agregar</button>
+            </div>
+            <div class="menu-item">
+                <span>
+                    <strong>Camarones Empanizados</strong> - $130 (Ensalada, arroz natural, aguacate y Philadelphia)<br>
+                </span>
+                <img src="camarones-empanizados.jpg" alt="Camarones Empanizados">
+                <button onclick="agregarProducto('Camarones Empanizados', 130)">Agregar</button>
+            </div>
+            <div class="menu-item">
+                <span>
+                    <strong>Mar Spicy</strong> - $130 (Camarón, pepino, aguacate y Philadelphia con un topping de camarón spicy por arriba)<br>
+                </span>
+                <img src="mar-spicy.jpg" alt="Mar Spicy">
+                <button onclick="agregarProducto('Mar Spicy', 130)">Agregar</button>
+            </div>
+            <div class="menu-item">
+                <span>
+                    <strong>Fila Roll</strong> - $110 (Camarón, pepino, aguacate y Philadelphia, con extra Philadelphia por fuera)<br>
+                </span>
+                <img src="fila-roll.jpg" alt="Fila Roll">
+                <button onclick="agregarProducto('Fila Roll', 110)">Agregar</button>
+            </div>
+            <div class="menu-item">
+                <span>
+                    <strong>Arroz Frito (Orden)</strong> - $140 (Camarón, calabaza, zanahoria, Philadelphia, aguacate)<br>
+                </span>
+                <img src="arroz-frito.jpg" alt="Arroz Frito">
+                <button onclick="agregarProducto('Arroz Frito', 140)">Agregar</button>
+            </div>
+            <div class="menu-item">
+                <span>
+                    <strong>Aguachile Verde</strong> - $130 (Cebolla, pepino, camarones, aguacate y tostadas)<br>
+                </span>
+                <img src="aguachile-verde.jpg" alt="Aguachile Verde">
+                <button onclick="agregarProducto('Aguachile Verde', 130)">Agregar</button>
+            </div>
+
+            <div id="subtotal">Subtotal: $0</div>
+            <div id="selected-products" class="selected-products"></div>
+        </div>
+        <a id="whatsapp-link" href="https://wa.me/523329654769?text=HOLA%20BUENAS%20TARDES%20ME%20GUSTARIA%20REALIZAR%20UN%20PEDIDO!!!" class="btn-whatsapp">Hacer Pedido por WhatsApp</a>
+    </div>
+</body>
+</html>
