@@ -114,13 +114,22 @@
             let enlace = `https://wa.me/523329654769?text=${encodeURIComponent(mensaje)}`;
             document.getElementById('whatsapp-link').href = enlace;
         }
+
+        function toggleMenu() {
+            let menu = document.getElementById('menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
     </script>
 </head>
 <body>
     <div class="container">
         <img src="1.jpg" alt="Logo Yessi Sushi" class="logo">
         <h1>Bienvenido a Sushi Yessi </h1>
-        <button class="btn-menu" onclick="document.getElementById('menu').style.display='block'">Ver Menú</button>
+        <button class="btn-menu" onclick="toggleMenu()">Ver Menú</button>
         <div id="menu">
             <h2>Menú de Productos</h2>
             <div class="menu-item">
