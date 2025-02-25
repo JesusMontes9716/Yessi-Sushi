@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Productos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Administrar Productos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="product-list"></tbody>
+        </table>
+
+        <h2>Agregar Nuevo Producto</h2>
+        <input type="text" id="new-name" placeholder="Nombre del producto">
+        <input type="number" id="new-price" placeholder="Precio">
+        <textarea id="new-description" placeholder="Descripción"></textarea>
+        <input type="file" id="new-image" accept="image/*">
+        <img id="preview-image" src="" style="width:100px; display:none;">
+        <button class="btn btn-add" onclick="agregarProducto()">Agregar</button>
+
+        <br><br>
+        <a href="index.html">Volver al Menú</a>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

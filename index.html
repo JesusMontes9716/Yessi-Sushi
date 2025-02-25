@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Productos</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos del menú */
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* Menú hamburguesa */
+        .icon {
+            display: none;
+        }
+
+        @media screen and (max-width: 600px) {
+            .navbar a { 
+                float: none; 
+                display: none;
+                text-align: left;
+            }
+            .icon {
+                display: block;
+                background-color: #333;
+                padding: 14px 20px;
+                cursor: pointer;
+                color: white;
+            }
+
+            .navbar.active a {
+                display: block;
+                animation: slideDown 0.3s ease-out;
+            }
+        }
+
+        /* Animación del menú desplegable */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Estilos para el formulario de contraseña */
+        .login-form {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .login-form input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .login-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background-color: #444;
+        }
+
+        /* Estilo para la tabla de productos en la orden */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #order-table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido a Sushi YESSI</h1>
+        
+        <!-- Menú de navegación -->
+        <div class="navbar">
+            <a href="#" id="admin-link" onclick="toggleLoginForm()">Administrar Producto</a>
+            <span class="icon" onclick="toggleMenu()">&#9776;</span>
+        </div>
+
+        <!-- Formulario de contraseña -->
+        <div class="login-form" id="login-form">
+            <h2>Ingrese la Contraseña</h2>
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="checkPassword()">Entrar</button>
+            <p id="error-message" style="color: red; display: none;">Contraseña incorrecta, intente de nuevo.</p>
+        </div>
+
+        <!-- Contenido de la página -->
+        <div id="product-container" class="product-container"></div>
+
+        <br><br>
+
+        <!-- Mostrar productos en la orden -->
+        <h2>Orden</h2>
+        <table id="order-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody id="order-list"></tbody>
+        </table>
+        <h3>Subtotal: $<span id="subtotal">0.00</span></h3>
+
+        <div id="order-container">
+            <h2>Tu Orden</h2>
+            <table id="order-list"></table>
+            <p><strong>Subtotal: $<span id="subtotal">0.00</span></strong></p>
+            <button id="btn-hacer-pedido" onclick="hacerPedido()">Hacer Pedido</button>
+        </div>
+
+        <br><br>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Contraseña de administrador (puedes cambiarla por algo más seguro)
+        const adminPassword = "admin123";
+
+        // Mostrar u ocultar el formulario de inicio de sesión
+        function toggleLoginForm() {
+            const loginForm = document.getElementById("login-form");
+            const currentDisplay = loginForm.style.display;
+            // Alternar entre mostrar y ocultar el formulario
+            if (currentDisplay === "none" || currentDisplay === "") {
+                loginForm.style.display = "block";
+            } else {
+                loginForm.style.display = "none";
+            }
+        }
+
+        // Función para verificar la contraseña
+        function checkPassword() {
+            const enteredPassword = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (enteredPassword === adminPassword) {
+                // Redirigir a la página de administración
+                window.location.href = "admin.html";
+            } else {
+                // Mostrar mensaje de error
+                errorMessage.style.display = "block";
+            }
+        }
+
+        // Función para mostrar u ocultar el menú desplegable
+        function toggleMenu() {
+            var navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('active');
+        }
+
+        // Función que maneja la acción de hacer un pedido
+        function hacerPedido() {
+            // Puedes agregar aquí la lógica para finalizar el pedido
+            const subtotal = document.getElementById("subtotal").textContent;
+            
+            if (parseFloat(subtotal) > 0) {
+                alert("¡Pedido realizado con éxito! El subtotal es de $" + subtotal);
+                // Limpiar la tabla de orden y subtotal
+                document.getElementById("order-list").innerHTML = "";
+                document.getElementById("subtotal").textContent = "0.00";
+            } else {
+                alert("No tienes productos en tu orden.");
+            }
+        }
+    </script>
+</body>
+</html>
